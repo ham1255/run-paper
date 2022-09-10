@@ -17,5 +17,5 @@
 package xyz.jpenilla.runpaper.paperapi
 
 internal object Projects {
-  const val PAPER: String = "paper"
+  const val MULTI_PAPER: String = "multipaper"
 }

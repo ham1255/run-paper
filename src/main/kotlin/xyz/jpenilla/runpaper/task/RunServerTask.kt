@@ -118,7 +118,7 @@ public abstract class RunServerTask : JavaExec() {
   override fun exec() {
     configure()
     beforeExec()
-    logger.lifecycle("Starting Paper...")
+    logger.lifecycle("Starting MultiPaper...")
     logger.lifecycle("")
     super.exec()
   }

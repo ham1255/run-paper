@@ -128,7 +128,7 @@ internal abstract class PaperclipService : BuildService<PaperclipService.Paramet
     val possible = version.knownJars[build]
     if (possible != null && !parameters.refreshDependencies.get()) {
       // We already have this Paperclip!
-      LOGGER.lifecycle("Located Paper {} build {} in local cache.", minecraftVersion, build)
+      LOGGER.lifecycle("Located MultiPaper {} build {} in local cache.", minecraftVersion, build)
 
       // Verify hash is still correct
       val localPaperclip = paperclipsFor(minecraftVersion).resolve(possible.fileName)
@@ -144,18 +144,18 @@ internal abstract class PaperclipService : BuildService<PaperclipService.Paramet
       version.knownJars.remove(build)
       writeVersions()
       localPaperclip.deleteIfExists()
-      LOGGER.lifecycle("Invalid SHA256 hash for locally cached Paper {} build {}, invalidating and attempting to re-download.", minecraftVersion, build)
+      LOGGER.lifecycle("Invalid SHA256 hash for locally cached MultiPaper {} build {}, invalidating and attempting to re-download.", minecraftVersion, build)
       logExpectedActual(possible.sha256, localBuildHash)
     }
 
     // Need to fetch new Paperclip!
     if (parameters.offlineMode.get()) {
-      error("Offline mode is enabled and Run Paper could not locate a locally cached build.")
+      error("Offline mode is enabled and Run MultiPaper could not locate a locally cached build.")
     }
-    LOGGER.lifecycle("Downloading Paper {} build {}...", minecraftVersion, build)
-    val buildResponse = api.build(Projects.PAPER, minecraftVersion, build)
+    LOGGER.lifecycle("Downloading MultiPaper {} build {}...", minecraftVersion, build)
+    val buildResponse = api.build(Projects.MULTI_PAPER, minecraftVersion, build)
     val download = buildResponse.downloads["application"] ?: error("Could not find download.")
-    val downloadLink = api.downloadURL(Projects.PAPER, minecraftVersion, build, download)
+    val downloadLink = api.downloadURL(Projects.MULTI_PAPER, minecraftVersion, build, download)
     val downloadURL = URL(downloadLink)
 
     val tempFile = createTempDirectory("runpaper")
@@ -166,8 +166,8 @@ internal abstract class PaperclipService : BuildService<PaperclipService.Paramet
       .download(createDownloadListener(project))
 
     when (downloadResult) {
-      is Downloader.Result.Success -> LOGGER.lifecycle("Done downloading Paper, took {}.", Duration.ofMillis(System.currentTimeMillis() - start).prettyPrint())
-      is Downloader.Result.Failure -> throw IllegalStateException("Failed to download Paper.", downloadResult.throwable)
+      is Downloader.Result.Success -> LOGGER.lifecycle("Done downloading MultiPaper, took {}.", Duration.ofMillis(System.currentTimeMillis() - start).prettyPrint())
+      is Downloader.Result.Failure -> throw IllegalStateException("Failed to download MultiPaper.", downloadResult.throwable)
     }
 
     // Verify SHA256 hash of downloaded jar
@@ -209,7 +209,7 @@ internal abstract class PaperclipService : BuildService<PaperclipService.Paramet
     }
 
     if (parameters.offlineMode.get()) {
-      LOGGER.lifecycle("Offline mode enabled, attempting to use latest local build of Paper for Minecraft {}.", minecraftVersion)
+      LOGGER.lifecycle("Offline mode enabled, attempting to use latest local build of MultiPaper for Minecraft {}.", minecraftVersion)
       return resolveLatestLocalBuild(minecraftVersion)
     }
 
@@ -230,8 +230,8 @@ internal abstract class PaperclipService : BuildService<PaperclipService.Paramet
   }
 
   private fun resolveLatestRemoteBuild(minecraftVersion: Version): Int = try {
-    LOGGER.lifecycle("Fetching Paper builds for Minecraft {}...", minecraftVersion.name)
-    api.version(Projects.PAPER, minecraftVersion.name).builds.last().apply {
+    LOGGER.lifecycle("Fetching MultiPaper builds for Minecraft {}...", minecraftVersion.name)
+    api.version(Projects.MULTI_PAPER, minecraftVersion.name).builds.last().apply {
       LOGGER.lifecycle("Latest build for {} is {}.", minecraftVersion.name, this)
       versions.versions[minecraftVersion.name] = minecraftVersion.copy(lastUpdateCheck = System.currentTimeMillis())
       writeVersions()
@@ -249,7 +249,7 @@ internal abstract class PaperclipService : BuildService<PaperclipService.Paramet
     return if (progressLogger != null) {
       LoggingDownloadListener(
         progressLogger,
-        { state, message -> state.start("Downloading Paper", message) },
+        { state, message -> state.start("Downloading MultiPaper", message) },
         { state, message -> state.progress(message) },
         { state -> state.completed() },
         "Downloading Paperclip: ",

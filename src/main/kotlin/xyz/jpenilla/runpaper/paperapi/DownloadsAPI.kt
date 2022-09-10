@@ -29,7 +29,7 @@ internal class DownloadsAPI {
       .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
       .build()
 
-    const val ENDPOINT: String = "https://papermc.io/api/v2/"
+    const val ENDPOINT: String = "https://multipaper.io/api/v2/"
   }
 
   /**

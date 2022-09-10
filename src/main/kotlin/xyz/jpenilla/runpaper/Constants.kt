@@ -17,8 +17,8 @@
 package xyz.jpenilla.runpaper
 
 internal object Constants {
-  const val RUN_PAPER = "RunPaper"
-  const val TASK_GROUP = "Run Paper"
+  const val RUN_PAPER = "RunMultiPaper"
+  const val TASK_GROUP = "Run MultiPaper"
   const val GRADLE_CACHES_DIRECTORY_NAME = "caches"
   const val RUN_PAPER_PATH = "$RUN_PAPER/v1"
 
@@ -47,6 +47,6 @@ internal object Constants {
   }
 
   object Extensions {
-    const val RUN_PAPER = "runPaper"
+    const val RUN_PAPER = "runMultiPaper"
   }
 }
